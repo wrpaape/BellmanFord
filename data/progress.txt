@@ -1,0 +1,22 @@
+2.
+    - TODO: slide 26 example
+    - TODO: slide 31 Question
+    - 33: switch vs hub vs router
+    - 37: which one is largest WAN? Internet or PSTN?
+    - 44: which transmission type works for telephony?
+    - MODEM translated transmitted data from digital to analog
+        - slide 49:
+    - 92: NAP key?
+
+    I wrote up a test C++ program which parses a text file and builds a graph
+organized in memory as an adjacency list.  The program accepts a "start" and
+"target" node, and leverages Dijkstra's algorithm to calculate and then display
+the shortest path from start to target.
+
+    I spent 90 minutes browsing through the remainder of the intro.pdf pages
+not covered in the first lecture.  I encountered instances on several pages
+where I wasn't clear or had incomplete information, but these were of a form
+that suggest that the remaining information will be provided while covering the
+page in lecture (i.e. reflective questions).  I have taken note of these
+unclear sections (slide 16, the question on slide 31, etc...) and will hold
+back on asking for clarification until they have been covered in lecture.
