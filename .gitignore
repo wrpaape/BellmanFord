@@ -2,3 +2,4 @@ BellmanFord
 output.txt
 *.zip
 *.o
+*.pdf
