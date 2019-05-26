@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "Graph.h"
 #include <iostream>
 #include <fstream>
 #include <utility>
@@ -80,7 +80,7 @@ findLoop(const std::vector<long> &paths)
             return dest;
         }
     }
-    std::runtime_error("failed to find expected loop");
+    throw std::runtime_error("failed to find expected loop");
 }
 
 void
@@ -96,24 +96,30 @@ reportNegativeLoop(const std::vector<long> &paths,
     reportPath(loop, output);
 }
 
-
 void
-reportBestPaths(const std::vector<long> &minCosts,
-                const std::vector<long> &paths,
-                long                     iterations,
-                std::ostream            &output)
+reportMinCosts(const std::vector<long> &minCosts,
+               std::ostream            &output)
 {
     auto costsIter = minCosts.cbegin();
     auto costsEnd  = minCosts.cend();
     while (true) {
-        output << *costsIter;
+        if (*costsIter != Graph::INFINITE_COST) {
+            output << *costsIter;
+        } else {
+            output << "inf";
+        }
         if (++costsIter == costsEnd) {
             break;
         }
         output << ',';
     }
     output << std::endl;
+}
 
+void
+reportPaths(const std::vector<long> &paths,
+            std::ostream            &output)
+{
     for (long dest = 0; dest < paths.size(); ++dest) {
         std::vector<long> path = getPath(paths, 0, dest);
         if (!path.empty()) {
@@ -122,7 +128,16 @@ reportBestPaths(const std::vector<long> &minCosts,
             output << "No path from 0 to " << dest << std::endl;
         }
     }
+}
 
+void
+reportBestPaths(const std::vector<long> &minCosts,
+                const std::vector<long> &paths,
+                long                     iterations,
+                std::ostream            &output)
+{
+    reportMinCosts(minCosts, output);
+    reportPaths(   paths,    output);
     output << "Iteration:" << iterations << std::endl;
 }
 
@@ -138,7 +153,9 @@ main(int argc, char *argv[])
         return 1;
     }
 
-    std::ifstream graphFile(argv[1]);
+    const char *graphFilename = argv[1];
+    std::ifstream graphFile(graphFilename);
+    std::ofstream outputFile("output.txt");
 
     Graph graph(graphFile);
 
@@ -147,9 +164,9 @@ main(int argc, char *argv[])
     auto [iterations, paths, minCosts] = graph.findBestPath();
 
     if (iterations > 0) {
-        reportBestPaths(*minCosts, paths, iterations, std::cout);
+        reportBestPaths(*minCosts, paths, iterations, outputFile);
     } else {
-        reportNegativeLoop(paths, std::cout);
+        reportNegativeLoop(paths, outputFile);
     }
     
     return 0;

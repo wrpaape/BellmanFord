@@ -1,9 +1,8 @@
-#include "graph.h"
+#include "Graph.h"
 #include <stdexcept>
 #include <sstream>
 #include <limits>
 #include <algorithm>
-#include <iostream>
 
 const long Graph::INFINITE_COST = std::numeric_limits<long>::max();
 
@@ -24,8 +23,9 @@ Graph::Graph(std::istream &input)
         tokens.str(line);
         tokens.clear();
         for (auto &stepCostMatrix : *rowIter) {
-            if (!(tokens >> token))
+            if (!(tokens >> token)) {
                 throw std::invalid_argument("not enough graph columns");
+            }
             stepCostMatrix = parseCost(token);
         }
     } while (   (++rowIter != rowsEnd)
@@ -37,7 +37,7 @@ Graph::Graph(std::istream &input)
 }
 
 std::tuple<
-    long,
+    unsigned long,
     std::vector<long>,
     std::optional<std::vector<long>>
 >
@@ -45,11 +45,14 @@ Graph::findBestPath()
 {
     std::vector<long> minCosts(stepCostMatrix.size(), INFINITE_COST);
     std::vector<long> bestPath(stepCostMatrix.size(), -1);
-    bool updated = false;
-    minCosts.front() = 0;
-    long iterations = 1;
+    bool updated     = false;
+    minCosts.front() = 0; // set the initial 
+    unsigned long iterations  = 1; // count the 
     do {
         updated = false;
+        // for every node, take a step to all accessible nodes
+        // if a cheaper path to a new node is found, update minCosts and
+        // bestPath
         for (long node = 0; node < stepCostMatrix.size(); ++node) {
             updated |= takeStep(node,
                                 stepCostMatrix[node],
@@ -60,6 +63,8 @@ Graph::findBestPath()
     } while (updated && (iterations < stepCostMatrix.size()));
 
     if (!updated) {
+        // early termination 
+        // => minCosts and bestPath are correct
         return {
             iterations,
             std::move(bestPath),
@@ -67,13 +72,13 @@ Graph::findBestPath()
         };
     }
 
-    return {
-        0,
-        std::move(bestPath),
-        std::nullopt
-    };
+    // continued updating past maximum N-1 iterations
+    // => must have encountered a negative loop
+    // => return '0' iterations to signal this condition
+    return { 0, std::move(bestPath), std::nullopt };
 }
 
+// for debugging purposes
 std::ostream& operator<<(std::ostream &output, const Graph &graph)
 {
     for (const auto &row : graph.stepCostMatrix) {
@@ -105,13 +110,13 @@ long
 Graph::parseCost(const std::string &token)
 {
     if (token == "inf")
-        return INFINITE_COST;
+        return INFINITE_COST; // infinite cost
 
     if ((token.front() == '[') && (token.back() == ']')) {
-        return parseMultiCost(token);
+        return parseMultiCost(token); // multi-cost of the form [c_0,...,c_N]
     }
 
-    return std::stol(token, nullptr);
+    return std::stol(token, nullptr); // integer cost
 }
 
 long
@@ -144,7 +149,7 @@ Graph::takeStep(long                     prevNode,
     for (long nextNode = 0; nextNode < stepCosts.size(); ++nextNode) {
         long stepCostPrevNext = stepCosts[nextNode];
         if (addWillOverflow(minCostToPrev, stepCostPrevNext)) {
-            continue;
+            continue; // nextNode is inaccessible from prevNode
         }
         long totalCostNext = minCostToPrev + stepCostPrevNext;
         long &minCostNext  = minCosts[nextNode];
