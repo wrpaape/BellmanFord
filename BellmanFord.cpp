@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "PathFinder.h"
 #include <iostream>
 #include <fstream>
 #include <utility>
@@ -141,6 +142,17 @@ reportBestPaths(const std::vector<long> &minCosts,
     output << "Iteration:" << iterations << std::endl;
 }
 
+template<typename FileStream>
+FileStream
+openFile(const std::string& filename)
+{
+    FileStream file(filename);
+    if (!file) {
+        throw std::runtime_error("cannot open " + filename);
+    }
+    return file;
+}
+
 } // namespace
 
 
@@ -154,14 +166,15 @@ main(int argc, char *argv[])
     }
 
     const char *graphFilename = argv[1];
-    std::ifstream graphFile(graphFilename);
-    std::ofstream outputFile("output.txt");
+    auto graphFile = openFile<std::ifstream>(graphFilename);
 
     Graph graph(graphFile);
 
     // std::cout << graph;
 
-    auto [iterations, paths, minCosts] = graph.findBestPath();
+    auto [iterations, paths, minCosts] = PathFinder::findBestPath(graph);
+
+    auto outputFile = openFile<std::ofstream>("output.txt");
 
     if (iterations > 0) {
         reportBestPaths(*minCosts, paths, iterations, outputFile);

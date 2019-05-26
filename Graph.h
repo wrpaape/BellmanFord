@@ -4,8 +4,6 @@
 #include <istream>
 #include <ostream>
 #include <vector>
-#include <tuple>
-#include <optional>
 
 class Graph
 {
@@ -25,19 +23,17 @@ public:
      */
     friend std::ostream& operator<<(std::ostream &output, const Graph &graph);
 
-    /**
-     * @brief Finds the lowest-cost path from node 0 to node N-1 using the
-     *     Bellman–Ford algorithm.
-     * @return { <iteration count> >= 1, <path vector>, <cost vector> } if the
-     *     algorithm terminates without encountering a negative loop.  If a
-     *     negative loop is encountered, return { 0, <path vector>, nullopt }.
-     */
-    std::tuple<
-        unsigned long,
-        std::vector<long>,
-        std::optional<std::vector<long>>
-    >
-    findBestPath();
+    auto
+    size() const
+    {
+        return stepCostMatrix.size();
+    }
+
+    const std::vector<long>&
+    operator[](long node) const
+    {
+        return stepCostMatrix[node];
+    }
 
     /**
      * a cost value reserved to represent infinity
