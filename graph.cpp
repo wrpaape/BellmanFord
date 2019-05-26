@@ -57,10 +57,6 @@ Graph::findBestPath()
                                 bestPath);
         }
         ++iterations;
-        // for (auto cost : minCosts) {
-        //     std::cout << cost << ' ';
-        // }
-        // std::cout << std::endl;
     } while (updated && (iterations < stepCostMatrix.size()));
 
     if (!updated) {

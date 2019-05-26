@@ -32,14 +32,18 @@ isLoop(const std::vector<long> &paths,
 std::vector<long>
 getPath(const std::vector<long> &paths,
         long                     start,
-        long                     dest)
+        long                     dest,
+        unsigned long            numCycles = 0)
 {
     std::vector<long> path;
     int prevNode = dest;
     while (true) {
         path.emplace_back(prevNode);
         if (prevNode == start) {
-            break;
+            if (numCycles == 0) {
+                break;
+            }
+            --numCycles;
         }
         prevNode = paths[prevNode];
 
@@ -71,7 +75,7 @@ reportPath(const std::vector<long> &path,
 long
 findLoop(const std::vector<long> &paths)
 {
-    for (long dest = paths.size() - 1; dest > 0; --dest) {
+    for (long dest = 0; dest < paths.size(); --dest) {
         if (isLoop(paths, dest)) {
             return dest;
         }
@@ -85,7 +89,7 @@ reportNegativeLoop(const std::vector<long> &paths,
 {
     output << "Negative Loop Detected" << std::endl;
     long destLoop = findLoop(paths);
-    std::vector<long> loop = getPath(paths, destLoop, destLoop);
+    std::vector<long> loop = getPath(paths, destLoop, destLoop, 1);
     if (loop.empty()) {
         throw std::runtime_error("no loop found");
     }
