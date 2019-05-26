@@ -4,6 +4,8 @@
 #include <istream>
 #include <ostream>
 #include <vector>
+#include <tuple>
+#include <optional>
 
 class Graph
 {
@@ -12,19 +14,35 @@ public:
 
     friend std::ostream& operator<<(std::ostream &output, const Graph &graph);
 
+    std::tuple<
+        long,
+        std::vector<long>,
+        std::optional<std::vector<long>>
+    >
+    findBestPath();
+
 private:
-    static const int INFINITE_COST;
+    static const long INFINITE_COST;
 
-    std::vector<std::vector<int>> matrix;
+    std::vector<std::vector<long>> stepCostMatrix;
 
-    int
+    static long
     parseCost(const std::string &token);
 
-    int
+    static long
     parseMultiCost(const std::string &token);
 
     void
     initMatrix(const std::string &firstLine);
+
+    static bool
+    addWillOverflow(long x, long y);
+
+    static bool
+    takeStep(long               prevNode,
+             const std::vector<long>    &stepCosts,
+             std::vector<long>       &minCosts,
+             std::vector<long>       &bestPath);
 };
 
 #endif // GRAPH_H
