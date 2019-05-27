@@ -40,7 +40,7 @@ The `BellmanFord` module is the main entry point of the program.  It opens the
 supplied graph file, builds a `Graph`, leverages the `PathFinder` module to
 find the best path across the `Graph`, and reports the results.  Refer to the
 [Output Format](#output-format) section for an explanation of report format
-format.  See the `main` and `report*` routines in BellmanFord.cpp for
+format.  See the `main()` and `report*()` routines in `BellmanFord.cpp` for
 implementation details.
 
 ### Graph
@@ -72,8 +72,10 @@ The pseudo code for the Bellman-Ford implementation is as follows:
 - provided a matrix of costs named "costs"
     - costs[i][j] is the cost of stepping from node i to node j
 - maintain a mapping of nodes to their costs named "minCosts"
-- maintain a mapping of nodes to the previous node through which a minimum cost path can be traced from node 0
+- maintain a mapping of nodes to the best path previous node
     - name this "bestPaths"
+    - a minimum cost path can be traced from node 0 to another node i
+    - the previous node to node i on this path will be stored at bestPaths[i]
 - maintain an iteration counter named "iterations"
 1. initialize minCosts with Graph::INFINITE_COST
 2. initialize paths with an invalid node (i.e. -1)
@@ -97,7 +99,8 @@ occurs after `N-1` iterations have been processed.  This suggests that further
 improvements (`minCosts` updates) can be made after the proven-maximum required
 number of iterations, which could only be possible in the case of the presence
 of at least one negative loop which will indefinitely drive down `minCosts`
-with every negative-cost series of steps taken.
+with every negative-cost series of steps taken.  See `PathFinder.cpp` for
+implementation details.
 
 
 ## Input Format
@@ -197,5 +200,6 @@ scheme in its output.  Outside of the provided test cases, I tested graphs of
 up to 10000 nodes and graphs with unreachable nodes.  This implementation
 handles both gracefully.  Unreachable nodes are marked with `inf` cost in their
 cost vector entry, and the line `No path from 0 to <node>` is output in place
-of their best path.  `BellmanFord` took around 5 seconds to terminate given a
-10000-node graph, and almost immediately for graphs with 1000 or less nodes.
+of their best path.  `BellmanFord` took a few seconds to terminate given a
+10000-node graph, and terminated almost immediately for graphs with 1000 or
+less nodes.
