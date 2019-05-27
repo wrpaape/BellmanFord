@@ -69,12 +69,12 @@ Implementation](#bellman-ford-implementation) section for pseudo code.
 ## Bellman-Ford Implementation
 The pseudo code for the Bellman-Ford implementation is as follows:
 ```
-- Provided a matrix of costs named "costs"
+- provided a matrix of costs named "costs"
     - costs[i][j] is the cost of stepping from node i to node j
-- Maintain a mapping of nodes to their costs named "minCosts"
-- Maintain a mapping of nodes to the previous node through which a minimum cost path can be traced from node 0.
+- maintain a mapping of nodes to their costs named "minCosts"
+- maintain a mapping of nodes to the previous node through which a minimum cost path can be traced from node 0
     - name this "bestPaths"
-- Maintain an iteration counter named "iterations"
+- maintain an iteration counter named "iterations"
 1. initialize minCosts with Graph::INFINITE_COST
 2. initialize paths with an invalid node (i.e. -1)
 3. set the cost to travel to node 0
