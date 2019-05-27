@@ -1,7 +1,7 @@
 CXX := g++
 CXXFLAGS := -std=c++17 -O0 -g
 
-.PHONY: all zip clean
+.PHONY: all zip clean clean-all
 
 all: BellmanFord
 
@@ -24,4 +24,8 @@ Graph.o: Graph.cpp Graph.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	$(RM) BellmanFord *.o report.pdf William_Paape_lab1.zip
+	$(RM) BellmanFord *.o
+
+clean-all: clean
+	$(RM) report.pdf William_Paape_lab1.zip
+
