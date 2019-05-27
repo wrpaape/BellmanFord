@@ -47,8 +47,8 @@ getPath(const std::vector<long> &paths,
             --numCycles;
         }
         prevNode = paths[prevNode];
-
         if (prevNode < 0) {
+            // inaccessible node, return an empty path
             path.clear();
             break;
         }
@@ -172,7 +172,7 @@ main(int argc, char *argv[])
 
     // std::cout << graph;
 
-    auto [iterations, paths, minCosts] = PathFinder::findBestPath(graph);
+    auto [iterations, paths, minCosts] = PathFinder::findBestPaths(graph);
 
     auto outputFile = openFile<std::ofstream>("output.txt");
 

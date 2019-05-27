@@ -15,7 +15,7 @@ namespace PathFinder {
  *     negative loop is encountered, return { 0, <path vector>, nullopt }.
  */
 std::tuple< unsigned long, std::vector<long>, std::optional<std::vector<long>> >
-findBestPath(const Graph &graph);
+findBestPaths(const Graph &graph);
 
 } // namespace PathFinder
 
